@@ -1,0 +1,10 @@
+pandas>=2.0
+numpy>=1.26
+scipy>=1.11
+lightgbm>=4.0
+psycopg2-binary>=2.9
+sqlalchemy>=2.0
+python-dotenv>=1.0
+streamlit>=1.35
+plotly>=5.20
+openpyxl>=3.1

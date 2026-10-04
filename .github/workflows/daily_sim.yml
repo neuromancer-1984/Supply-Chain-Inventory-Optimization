@@ -1,0 +1,26 @@
+name: daily-sim
+
+on:
+  schedule:
+    - cron: "30 1 * * *"      # every day 07:00 IST: advance the simulated supply chain
+    - cron: "30 2 * * 0"      # Sundays 08:00 IST: re-run backtests and refresh the live forecast
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Advance simulation to today
+        run: python -m src.simulator daily
+      - name: Weekly forecast refresh
+        if: github.event.schedule == '30 2 * * 0' || github.event_name == 'workflow_dispatch'
+        run: python -m src.forecast_arena all
